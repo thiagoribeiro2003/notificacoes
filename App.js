@@ -67,7 +67,7 @@ export default function App() {
     const mensagem = {
       title: "Não se esqueça 👨‍💻🚀",
       body: "Não se esqueça de tomar água!",
-      data: { usuario: "Thiago 👨‍💻🚀", cidade: "São Paulo" },
+      data: { usuario: "Sverino 👨‍💻🚀", cidade: "Vitória de Santo Antão" },
       sound: Platform.OS === "ios" ? "default" : "", // necessário pro IOS
     };
 
