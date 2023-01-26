@@ -39,6 +39,16 @@ export default function App() {
 
     permissoesIos();
 
+    /* Obter as permissões atuais do dispositivo */
+    Notifications.getPermissionsAsync().then((status) => {
+      if (status.granted) {
+        /* Permissões ok? Então obter o token expo do aparelho*/
+        Notifications.getExpoPushTokenAsync().then((token) => {
+          console.log(token);
+        });
+      }
+    });
+
     /* Ouvinte de evento para as notificações recebidas, ou seja, 
     quando a notificação aparece no topo da tela do dispositivo. */
     Notifications.addNotificationReceivedListener((notificacao) => {
