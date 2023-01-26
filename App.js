@@ -1,6 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView, Button } from "react-native";
-import { useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Button,
+  Platform,
+} from "react-native";
+import { useEffect, useState } from "react";
 import * as Notifications from "expo-notifications";
 
 /* Manipulador de eventos de notificação */
@@ -15,6 +22,8 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
+  const [dados, setDados] = useState(null);
+
   useEffect(() => {
     /* Necessário para IOS*/
     async function permissoesIos() {
@@ -28,6 +37,8 @@ export default function App() {
       });
     }
 
+    permissoesIos();
+
     /* Ouvinte de evento para as notificações recebidas, ou seja, 
     quando a notificação aparece no topo da tela do dispositivo. */
     Notifications.addNotificationReceivedListener((notificacao) => {
@@ -38,6 +49,7 @@ export default function App() {
     quando o usuário interage (toca na notificação). */
     Notifications.addNotificationResponseReceivedListener((resposta) => {
       console.log(resposta.notification.request.content.data);
+      setDados(resposta.notification.request.content.data);
     });
   }, []);
 
@@ -45,8 +57,8 @@ export default function App() {
     const mensagem = {
       title: "Não se esqueça 👨‍💻🚀",
       body: "Não se esqueça de tomar água!",
-      sound: "default", // necessário pro IOS
       data: { usuario: "Thiago 👨‍💻🚀", cidade: "São Paulo" },
+      sound: Platform.OS === "ios" ? "default" : "", // necessário pro IOS
     };
 
     await Notifications.scheduleNotificationAsync({
@@ -61,6 +73,12 @@ export default function App() {
       <SafeAreaView style={estilos.container}>
         <Text>Open up App.js to start working on your app!</Text>
         <Button title="Disparar notificação" onPress={enviarMensagem} />
+        {dados && (
+          <View style={estilos.conteudo}>
+            <Text>{dados.usuario}</Text>
+            <Text>{dados.cidade}</Text>
+          </View>
+        )}
       </SafeAreaView>
     </>
   );
@@ -72,5 +90,9 @@ const estilos = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  conteudo: {
+    marginVertical: 8,
+    backgroundColor: "yellow",
   },
 });
